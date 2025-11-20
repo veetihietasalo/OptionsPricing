@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-bbg-dark text-bbg-text;
+    font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+  }
+}
+
+@layer components {
+
+  /* Bloomberg Terminal Card */
+  .bbg-card {
+    @apply bg-bbg-gray border-l-4 border-bbg-orange rounded-none shadow-2xl;
+  }
+
+  /* Bloomberg Header Bar */
+  .bbg-header {
+    @apply bg-bbg-orange text-black font-bold tracking-wider;
+  }
+
+  /* Bloomberg Data Panel */
+  .bbg-panel {
+    @apply bg-bbg-panel border border-bbg-orange/30 p-4;
+  }
+
+  /* Bloomberg Input - Terminal Style */
+  .bbg-input {
+    @apply bg-bbg-dark border border-bbg-orange/50 text-bbg-text font-mono px-3 py-2 focus:border-bbg-orange focus:outline-none focus:ring-1 focus:ring-bbg-orange uppercase;
+  }
+
+  /* Bloomberg Button */
+  .bbg-button {
+    @apply bg-bbg-orange text-black font-bold px-6 py-2 hover:bg-bbg-accent transition-colors uppercase tracking-wider;
+  }
+
+  /* Bloomberg Metric Display */
+  .bbg-metric {
+    @apply font-mono text-sm;
+  }
+
+  /* Bloomberg Alert - Positive */
+  .bbg-positive {
+    @apply text-bbg-green;
+  }
+
+  /* Bloomberg Alert - Negative */
+  .bbg-negative {
+    @apply text-bbg-red;
+  }
+
+  /* Bloomberg Ticker */
+  .bbg-ticker {
+    @apply font-mono font-bold text-bbg-orange tracking-widest;
+  }
+}

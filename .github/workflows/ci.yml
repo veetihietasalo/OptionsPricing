@@ -1,0 +1,42 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install Backend Dependencies
+        run: bun install
+
+      - name: Build Backend
+        run: |
+          # Add build step if applicable, or just typecheck
+          # bun run build
+          echo "Backend install complete"
+
+      - name: Install Frontend Dependencies
+        working-directory: ./client
+        run: bun install
+
+      - name: Build Frontend
+        working-directory: ./client
+        run: bun run build
+
+      - name: Verify Types
+        run: |
+          # Optional: run tsc to check types
+          # bun x tsc --noEmit
+          echo "Type verification skipped for now"

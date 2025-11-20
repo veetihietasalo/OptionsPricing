@@ -1,0 +1,62 @@
+{
+  "appId": "com.optionspricing.terminal",
+  "name": "Options Pricing Engine",
+  "version": "1.0.0",
+  "description": "Advanced options analytics with Black-Scholes pricing, Greeks calculation, ML recommendation signals, and statistical arbitrage",
+  "type": "web",
+  "entryPoint": "https://your-domain.com",
+  "icon": "assets/icon.png",
+  "launchCommand": "OPTPRICING",
+  "categories": [
+    "derivatives",
+    "analytics",
+    "quantitative"
+  ],
+  "permissions": [
+    "MARKET_DATA",
+    "REFERENCE_DATA",
+    "USER_IDENTITY",
+    "HISTORICAL_DATA"
+  ],
+  "author": {
+    "name": "Your Name",
+    "email": "your.email@example.com",
+    "company": "Your Company"
+  },
+  "support": {
+    "email": "support@your-domain.com",
+    "documentation": "https://docs.your-domain.com"
+  },
+  "pricing": {
+    "model": "subscription",
+    "tiers": [
+      {
+        "name": "Professional",
+        "price": 99,
+        "currency": "USD",
+        "period": "monthly"
+      },
+      {
+        "name": "Enterprise",
+        "price": 999,
+        "currency": "USD",
+        "period": "monthly",
+        "features": [
+          "unlimited_users",
+          "priority_support",
+          "custom_models"
+        ]
+      }
+    ]
+  },
+  "technical": {
+    "minTerminalVersion": "4.0",
+    "supportedPlatforms": [
+      "windows",
+      "mac"
+    ],
+    "dependencies": {
+      "blpapi": ">=3.18.0"
+    }
+  }
+}
