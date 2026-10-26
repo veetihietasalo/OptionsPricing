@@ -1,13 +1,13 @@
 # Contributing to Options Pricing Engine
 
-Thank you for your interest in contributing to the Options Pricing Engine! This project aims to build a professional-grade options analytics platform compatible with Bloomberg Terminal.
+Thanks for your interest in contributing. This is a Black-Scholes options pricer with a React UI styled after the Bloomberg Terminal. It has no Bloomberg data connection.
 
 ## 🤝 How to Contribute
 
 ### 1. Fork and Clone
-Fork the repository to your GitHub account and clone it locally:
+Fork the repository to your GitHub account and clone your fork locally (replace `<your-username>` with your GitHub username):
 ```bash
-git clone https://github.com/yourusername/OptionsPricing.git
+git clone https://github.com/<your-username>/OptionsPricing.git
 cd OptionsPricing
 ```
 

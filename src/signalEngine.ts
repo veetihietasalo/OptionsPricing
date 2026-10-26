@@ -1,4 +1,4 @@
-// ML-based recommendation signals engine
+// Rule-based recommendation signals (no ML)
 export interface Signal {
   type: 'BUY_CALL' | 'BUY_PUT' | 'SELL_VOLATILITY' | 'BUY_VOLATILITY';
   strike: number;
@@ -14,7 +14,7 @@ export class SignalEngine {
    * Returns 0-100, where >80 = high IV, <20 = low IV
    */
   static calculateIVRank(currentIV: number, historicalIV: number[] = []): number {
-    // Simplified: use 20-80 range for demo
+    // Simplified for the demo: a fixed 10% to 80% IV range instead of historical IV
     const minIV = 0.10;
     const maxIV = 0.80;
     return ((currentIV - minIV) / (maxIV - minIV)) * 100;
