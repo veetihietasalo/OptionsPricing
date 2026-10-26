@@ -95,7 +95,8 @@ export function Heatmap({ spot, rate, volatility, type }: HeatmapProps) {
                 <td className="text-bbg-orange p-1 font-semibold">
                   {strike}
                 </td>
-                {heatmapData.prices[i].map((price, j) => (
+                {/* The API returns one row per expiration, so this strike's price at expiration j is prices[j][i] */}
+                {heatmapData.expirations.map((_, j) => heatmapData.prices[j][i]).map((price, j) => (
                   <td
                     key={j}
                     className="p-1 text-center font-semibold cursor-pointer hover:scale-110 transition-transform"
