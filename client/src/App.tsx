@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Heatmap } from './Heatmap';
+import { Pairs } from './Pairs';
+import { Signals } from './Signals';
 import './index.css';
 
 interface OptionData {
