@@ -100,7 +100,7 @@ app.post('/api/options/heatmap', (req: Request, res: Response) => {
   }
 });
 
-// Get ML-based recommendation signals
+// Rule-based recommendation signals (no ML)
 app.post('/api/signals', (req: Request, res: Response) => {
   try {
     const { spot, strike, rate, volatility, time } = req.body;
