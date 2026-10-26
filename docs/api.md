@@ -27,17 +27,19 @@ Calculates the theoretical price and Greeks for a single option using the Black-
 {
   "success": true,
   "data": {
-    "price": "10.45",
+    "price": "12.3360",
     "greeks": {
-      "delta": "0.637",
-      "gamma": "0.018",
-      "theta": "-6.452",
-      "vega": "37.521",
-      "rho": "53.210"
+      "delta": "0.6274",
+      "gamma": "0.015137",
+      "theta": "-7.2505",
+      "vega": "0.3784",
+      "rho": "0.5040"
     }
   }
 }
 ```
+
+Values come back as strings. Theta is per year, vega and rho per 1 percentage point.
 
 ---
 
@@ -66,18 +68,20 @@ Generates a matrix of option prices for a range of strike prices and expiration 
     "strikes": [90, 95, 100, 105, 110],
     "expirations": [0.5, 1.0, 1.5],
     "prices": [
-      [15.2, 18.5, 21.2], // Prices for strike 90 at different expirations
-      [11.5, 14.8, 17.5], // Prices for strike 95
-      // ...
+      [14.44, 11.08, 8.26, 5.99, 4.23],  // expiration 0.5, strikes 90 to 110
+      [18.14, 15.05, 12.34, 10, 8.03],   // expiration 1.0
+      [21.28, 18.33, 15.69, 13.35, 11.29] // expiration 1.5
     ]
   }
 }
 ```
 
+One row per expiration, one column per strike: `prices[i][j]` is the price for `expirations[i]` and `strikes[j]`.
+
 ---
 
 ### 3. Get Trading Signals
-Analyzes market parameters to generate ML-based trading recommendations.
+Rule-based signals, not ML. IV rank is measured against a fixed 10% to 80% range instead of historical IV, so it can go above 100. Moneyness rules fire when spot is more than 5% from the strike.
 
 **POST** `/signals`
 
@@ -101,10 +105,10 @@ Analyzes market parameters to generate ML-based trading recommendations.
       {
         "type": "SELL_VOLATILITY",
         "strike": 100,
-        "expiry": 1.0,
+        "expiry": 1,
         "confidence": 0.95,
-        "reason": "IV Rank 85% > 80% - Overvalued",
-        "ivRank": 85
+        "reason": "IV Rank 107% > 80% - Overvalued",
+        "ivRank": 107.14285714285714
       }
     ]
   }
@@ -114,14 +118,14 @@ Analyzes market parameters to generate ML-based trading recommendations.
 ---
 
 ### 4. Scan Pairs Opportunities
-Scans predefined asset pairs for statistical arbitrage opportunities based on implied volatility spreads.
+Z-score of the IV spread for 5 fixed equity pairs. The IVs and correlations are random demo data, so the result changes on every call and the signals mean nothing yet.
 
 **POST** `/pairs/scan`
 
 **Request Body:**
 ```json
 {
-  "volatility": 0.25 // Base market volatility for simulation
+  "volatility": 0.25 // Base volatility the random IVs are drawn around
 }
 ```
 
@@ -132,13 +136,16 @@ Scans predefined asset pairs for statistical arbitrage opportunities based on im
   "data": {
     "pairs": [
       {
-        "asset1": "AAPL",
-        "asset2": "MSFT",
-        "correlation": 0.85,
-        "currentIVSpread": 0.05,
-        "zscore": 3.0,
-        "signal": "LONG_B_SHORT_A"
+        "asset1": "XLE",
+        "asset2": "USO",
+        "correlation": 0.8463591963561772,
+        "currentIVSpread": -0.04213773269356569,
+        "historicalMeanSpread": 0.02,
+        "stdSpread": 0.01,
+        "zscore": -6.213773269356569,
+        "signal": "LONG_A_SHORT_B"
       }
+      // ... 4 more pairs, sorted by absolute z-score
     ]
   }
 }
