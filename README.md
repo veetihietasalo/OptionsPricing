@@ -1,5 +1,9 @@
 # OptionsPricing
 
+> **Educational use only. This is not investment advice.**
+>
+> Signals such as BUY_CALL, BUY_PUT, and SELL_VOLATILITY are illustrative model outputs, not recommendations. Nothing here is financial advice. Options trading carries a risk of loss.
+
 Black-Scholes pricer for European options: price, all five Greeks, and a price heatmap over strikes and expiries. Bun + Express API, React UI styled after the Bloomberg Terminal. There is no Bloomberg data connection: no BLPAPI code, and every input comes from the UI sliders or the API request. The signals and pairs tabs are rule-based demos, not ML.
 
 What works:
