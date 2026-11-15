@@ -16,21 +16,20 @@ The pricing is plain closed-form code, 134 lines in `src/blackScholes.ts`, with 
   - N is the Abramowitz-Stegun polynomial approximation of the normal CDF.
   - Theta is per year. Vega and rho are per 1 percentage point.
 - `src/server.ts`: Express API on port 3001: `POST /api/options/price`, `/api/options/heatmap`, `/api/signals`, `/api/pairs/scan` and `GET /api/health`. Request and response shapes are in [docs/api.md](docs/api.md).
-- `client/`: React 19, Vite 7, Tailwind. Inputs, the Greeks, and tabs for heatmap, signals and pairs.
+- `client/`: React 19, Vite 8, Tailwind 4. Inputs, the Greeks, and tabs for heatmap, signals and pairs.
 - Signals and pairs are rule-based demos, not ML. Signals: IV rank against a fixed 10% to 80% range, plus spot more than 5% from the strike. Pairs: z-score of the IV spread for 5 equity pairs, on random IVs, so those signals mean nothing yet.
 
 ## Run
 
 ```bash
-bun install
-bun run src/server.ts        # API on http://localhost:3001
-
-cd client
-bun install
-bun run dev                  # UI on http://localhost:5173
+bun install                  # one install for the API and the client (Bun workspace)
+bun start                    # API on http://localhost:3001
+bun run dev:client           # UI on http://localhost:5173, in a second terminal
 ```
 
-The client calls `http://localhost:3001` directly, so the API has to run on that port. One request:
+`bun run check` runs what CI runs: typecheck for the API and the client, lint, and the client build.
+
+The client calls `http://localhost:3001` unless `VITE_API_URL` is set when it is built or started. One request:
 
 ```bash
 curl -X POST localhost:3001/api/options/price -H 'content-type: application/json' \
@@ -44,11 +43,11 @@ S = 100, K = 100, r = 5%, σ = 25%, T = 1 year, from the running API:
 - call: price 12.3360, delta 0.6274, gamma 0.015137, theta −7.2505, vega 0.3784, rho 0.5040
 - put: price 7.4589, delta −0.3726, gamma 0.015137, theta −2.4943, vega 0.3784, rho −0.4472
 
-Put-call parity holds: C − P = 4.8771 and S − K e^(−rT) = 4.8771. A separate calculation in Python with `math.erf` gives the same call and put prices to 4 decimals. `bun run build` in `client/` passes and the dev server answers on port 5173. The UI itself wasn't clicked through.
+Put-call parity holds: C − P = 4.8771 and S − K e^(−rT) = 4.8771. A separate calculation in Python with `math.erf` gives the same call and put prices to 4 decimals. After the November 2026 upgrade the API returns the same call and put answers byte for byte, `bun run check` passes on a clean install, and the UI was opened at 1440x900 and 390x844: price, Greeks, heatmap and the three tabs load with no console errors.
 
 ## How it was built
 
-The app arrived as one commit in November 2025, so git doesn't show who wrote which part. Coding agents (Mad Tech Agents) made 5 of the 9 commits, all in October 2026: docs matched to the code, Signals and Pairs imported properly, heatmap cells moved under the right strike and expiry, API doc examples taken from the real server.
+The app arrived as one commit in November 2025, so git doesn't show who wrote which part. Coding agents (Mad Tech Agents) made 5 of the 9 commits, all in October 2026: docs matched to the code, Signals and Pairs imported properly, heatmap cells moved under the right strike and expiry, API doc examples taken from the real server. In November 2026 they brought the tooling up to date: Vite 8, Tailwind 4, ESLint 10, TypeScript 6, Express 5.3, one Bun workspace, and a CI that runs typecheck, lint and build.
 
 ## What I learned
 
@@ -59,8 +58,9 @@ The app arrived as one commit in November 2025, so git doesn't show who wrote wh
 
 ## Left
 
-- No tests yet. CI installs both parts and builds the client, so the client is type checked. The backend isn't: `tsc --noEmit` shows 2 errors in `src/server.ts` (`Request` and `Response` need type-only imports). Bun runs it anyway.
+- No tests yet. CI type checks the API and the client, lints both and builds the client, but nothing checks the pricing maths.
+- TypeScript is 6.0, not 7: `typescript-eslint` 8.72 supports TypeScript below 6.1.
 - No live market data. Signals and pairs need real historical IV before they mean anything.
-- Not deployed. The client has `localhost:3001` hardcoded.
+- Not deployed. The client defaults to `localhost:3001`, `VITE_API_URL` points it elsewhere.
 
 MIT license, see `LICENSE`.

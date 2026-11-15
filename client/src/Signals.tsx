@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { usePost } from './api';
 
 interface Signal {
   type: string;
@@ -18,32 +18,14 @@ interface SignalsProps {
 }
 
 export function Signals({ spot, strike, rate, volatility, time }: SignalsProps) {
-  const [signals, setSignals] = useState<Signal[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    fetchSignals();
-  }, [spot, strike, rate, volatility, time]);
-
-  const fetchSignals = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('http://localhost:3001/api/signals', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ spot, strike, rate, volatility, time }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        setSignals(data.data.signals);
-      }
-    } catch (error) {
-      console.error('Error fetching signals:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data, loading } = usePost<{ signals: Signal[] }>('/api/signals', {
+    spot,
+    strike,
+    rate,
+    volatility,
+    time,
+  });
+  const signals = data?.signals ?? [];
 
   const getSignalIcon = (type: string) => {
     switch (type) {
@@ -57,11 +39,11 @@ export function Signals({ spot, strike, rate, volatility, time }: SignalsProps) 
 
   const getSignalColor = (type: string) => {
     switch (type) {
-      case 'BUY_CALL': return 'bbg-green';
-      case 'BUY_PUT': return 'bbg-red';
-      case 'SELL_VOLATILITY': return 'bbg-orange';
-      case 'BUY_VOLATILITY': return 'bbg-blue';
-      default: return 'bbg-text';
+      case 'BUY_CALL': return 'text-bbg-green';
+      case 'BUY_PUT': return 'text-bbg-red';
+      case 'SELL_VOLATILITY': return 'text-bbg-orange';
+      case 'BUY_VOLATILITY': return 'text-bbg-blue';
+      default: return 'text-bbg-text';
     }
   };
 
@@ -86,7 +68,7 @@ export function Signals({ spot, strike, rate, volatility, time }: SignalsProps) 
               <div className="flex items-start gap-3">
                 <span className="text-2xl">{getSignalIcon(signal.type)}</span>
                 <div>
-                  <p className={`font-mono text-sm font-bold text-${getSignalColor(signal.type)}`}>
+                  <p className={`font-mono text-sm font-bold ${getSignalColor(signal.type)}`}>
                     {signal.type.replace(/_/g, ' ')}
                   </p>
                   <p className="text-xs font-mono text-gray-400 mt-1">
@@ -100,7 +82,7 @@ export function Signals({ spot, strike, rate, volatility, time }: SignalsProps) 
                 </div>
               </div>
               <div className="text-right">
-                <div className="bg-bbg-orange text-black px-2 py-1 rounded text-xs font-mono font-bold">
+                <div className="bg-bbg-orange text-black px-2 py-1 rounded-sm text-xs font-mono font-bold">
                   {(signal.confidence * 100).toFixed(0)}%
                 </div>
                 <p className="text-xs text-gray-500 font-mono mt-1">CONF</p>

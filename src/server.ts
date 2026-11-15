@@ -1,6 +1,8 @@
 import cors from 'cors';
-import express, { Request, Response } from 'express';
+import express, { type Request, type Response } from 'express';
 import { BlackScholes, type OptionParams } from './blackScholes';
+import { SignalEngine } from './signalEngine';
+import { StatArb } from './statArb';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -10,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 // Health check
-app.get('/api/health', (req: Request, res: Response) => {
+app.get('/api/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
@@ -109,8 +111,6 @@ app.post('/api/signals', (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    // Import signal engine
-    const { SignalEngine } = require('./signalEngine');
     const signals = SignalEngine.getRecommendations(
       parseFloat(spot),
       parseFloat(strike),
@@ -138,7 +138,6 @@ app.post('/api/pairs/scan', (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Volatility required' });
     }
 
-    const { StatArb } = require('./statArb');
     const pairs = StatArb.scanOpportunities(parseFloat(volatility));
 
     res.json({

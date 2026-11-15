@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { usePost } from './api';
 
 interface Pair {
   asset1: string;
@@ -16,32 +16,8 @@ interface PairsProps {
 }
 
 export function Pairs({ volatility }: PairsProps) {
-  const [pairs, setPairs] = useState<Pair[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    fetchPairs();
-  }, [volatility]);
-
-  const fetchPairs = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('http://localhost:3001/api/pairs/scan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ volatility }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        setPairs(data.data.pairs);
-      }
-    } catch (error) {
-      console.error('Error fetching pairs:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data, loading } = usePost<{ pairs: Pair[] }>('/api/pairs/scan', { volatility });
+  const pairs = data?.pairs ?? [];
 
   if (loading) {
     return (
@@ -80,7 +56,7 @@ export function Pairs({ volatility }: PairsProps) {
             </div>
             <div className="text-center">
               {pair.signal !== 'NEUTRAL' ? (
-                <span className="bg-bbg-orange text-black px-2 py-0.5 rounded text-xs font-bold">
+                <span className="bg-bbg-orange text-black px-2 py-0.5 rounded-sm text-xs font-bold">
                   {pair.signal === 'LONG_A_SHORT_B' ? '↑A ↓B' : '↓A ↑B'}
                 </span>
               ) : (

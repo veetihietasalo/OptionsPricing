@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { usePost } from './api';
 
 interface HeatmapProps {
   spot: number;
@@ -14,40 +14,22 @@ interface HeatmapData {
 }
 
 export function Heatmap({ spot, rate, volatility, type }: HeatmapProps) {
-  const [heatmapData, setHeatmapData] = useState<HeatmapData | null>(null);
-  const [loading, setLoading] = useState(false);
+  const strikes = Array.from({ length: 8 }, (_, i) =>
+    Math.round(spot * (0.85 + (i * 0.04)))
+  );
 
-  useEffect(() => {
-    fetchHeatmap();
-  }, [spot, rate, volatility, type]);
+  const expirations = Array.from({ length: 8 }, (_, i) =>
+    parseFloat((0.1 + i * 0.25).toFixed(2))
+  );
 
-  const fetchHeatmap = async () => {
-    setLoading(true);
-    try {
-      const strikes = Array.from({ length: 8 }, (_, i) =>
-        Math.round(spot * (0.85 + (i * 0.04)))
-      );
-
-      const expirations = Array.from({ length: 8 }, (_, i) =>
-        parseFloat((0.1 + i * 0.25).toFixed(2))
-      );
-
-      const response = await fetch('http://localhost:3001/api/options/heatmap', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ spot, strikes, expirations, rate, volatility, type }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        setHeatmapData(data.data);
-      }
-    } catch (error) {
-      console.error('Error fetching heatmap:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: heatmapData, loading } = usePost<HeatmapData>('/api/options/heatmap', {
+    spot,
+    strikes,
+    expirations,
+    rate,
+    volatility,
+    type,
+  });
 
   const getBloombergColor = (value: number, min: number, max: number) => {
     const ratio = (value - min) / (max - min);
