@@ -1,58 +1,83 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --color-bbg-orange: #ff6600;
+  --color-bbg-dark: #0a0a0a;
+  --color-bbg-gray: #1a1a1a;
+  --color-bbg-panel: #2a2a2a;
+  --color-bbg-text: #ffffff;
+  --color-bbg-accent: #ffb84d;
+  --color-bbg-green: #00ff00;
+  --color-bbg-red: #ff0000;
+  --color-bbg-blue: #00bfff;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility bbg-card {
+  /* Bloomberg Terminal Card */
+  @apply bg-bbg-gray border-l-4 border-bbg-orange rounded-none shadow-2xl;
+}
+
+@utility bbg-header {
+  /* Bloomberg Header Bar */
+  @apply bg-bbg-orange text-black font-bold tracking-wider;
+}
+
+@utility bbg-panel {
+  /* Bloomberg Data Panel */
+  @apply bg-bbg-panel border border-bbg-orange/30 p-4;
+}
+
+@utility bbg-input {
+  /* Bloomberg Input - Terminal Style */
+  @apply bg-bbg-dark border border-bbg-orange/50 text-bbg-text font-mono px-3 py-2 focus:border-bbg-orange focus:outline-hidden focus:ring-1 focus:ring-bbg-orange uppercase;
+}
+
+@utility bbg-button {
+  /* Bloomberg Button */
+  @apply bg-bbg-orange text-black font-bold px-6 py-2 hover:bg-bbg-accent transition-colors uppercase tracking-wider;
+}
+
+@utility bbg-metric {
+  /* Bloomberg Metric Display */
+  @apply font-mono text-sm;
+}
+
+@utility bbg-positive {
+  /* Bloomberg Alert - Positive */
+  @apply text-bbg-green;
+}
+
+@utility bbg-negative {
+  /* Bloomberg Alert - Negative */
+  @apply text-bbg-red;
+}
+
+@utility bbg-ticker {
+  /* Bloomberg Ticker */
+  @apply font-mono font-bold text-bbg-orange tracking-widest;
+}
 
 @layer base {
   body {
     @apply bg-bbg-dark text-bbg-text;
     font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
-  }
-}
-
-@layer components {
-
-  /* Bloomberg Terminal Card */
-  .bbg-card {
-    @apply bg-bbg-gray border-l-4 border-bbg-orange rounded-none shadow-2xl;
-  }
-
-  /* Bloomberg Header Bar */
-  .bbg-header {
-    @apply bg-bbg-orange text-black font-bold tracking-wider;
-  }
-
-  /* Bloomberg Data Panel */
-  .bbg-panel {
-    @apply bg-bbg-panel border border-bbg-orange/30 p-4;
-  }
-
-  /* Bloomberg Input - Terminal Style */
-  .bbg-input {
-    @apply bg-bbg-dark border border-bbg-orange/50 text-bbg-text font-mono px-3 py-2 focus:border-bbg-orange focus:outline-none focus:ring-1 focus:ring-bbg-orange uppercase;
-  }
-
-  /* Bloomberg Button */
-  .bbg-button {
-    @apply bg-bbg-orange text-black font-bold px-6 py-2 hover:bg-bbg-accent transition-colors uppercase tracking-wider;
-  }
-
-  /* Bloomberg Metric Display */
-  .bbg-metric {
-    @apply font-mono text-sm;
-  }
-
-  /* Bloomberg Alert - Positive */
-  .bbg-positive {
-    @apply text-bbg-green;
-  }
-
-  /* Bloomberg Alert - Negative */
-  .bbg-negative {
-    @apply text-bbg-red;
-  }
-
-  /* Bloomberg Ticker */
-  .bbg-ticker {
-    @apply font-mono font-bold text-bbg-orange tracking-widest;
   }
 }

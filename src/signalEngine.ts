@@ -13,7 +13,7 @@ export class SignalEngine {
    * Calculate IV Rank (percentile of current IV in historical range)
    * Returns 0-100, where >80 = high IV, <20 = low IV
    */
-  static calculateIVRank(currentIV: number, historicalIV: number[] = []): number {
+  static calculateIVRank(currentIV: number, _historicalIV: number[] = []): number {
     // Simplified for the demo: a fixed 10% to 80% IV range instead of historical IV
     const minIV = 0.10;
     const maxIV = 0.80;
@@ -87,7 +87,7 @@ export class SignalEngine {
   static getRecommendations(
     spot: number,
     strike: number,
-    rate: number,
+    _rate: number,
     volatility: number,
     time: number
   ): Signal[] {

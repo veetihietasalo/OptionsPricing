@@ -1,6 +1,6 @@
 # Deployment Guide
 
-Nothing is deployed yet. The client calls `http://localhost:3001` directly (in `App.tsx`, `Heatmap.tsx`, `Signals.tsx` and `Pairs.tsx`), so a hosted frontend needs that URL changed first.
+Nothing is deployed yet. The client calls `http://localhost:3001` by default (`client/src/api.ts`). A hosted frontend sets `VITE_API_URL` to the backend's URL at build time.
 
 ## Cloud Deployment
 
@@ -12,8 +12,8 @@ Nothing is deployed yet. The client calls `http://localhost:3001` directly (in `
 1. Connect your GitHub repository to Vercel.
 2. Set the Root Directory to `client`.
 3. Vercel will automatically detect Vite and build the project.
-4. Configure the API proxy or ensure your backend is deployed elsewhere (e.g., Railway, Render) and update the API URL in the frontend.
+4. Deploy the backend elsewhere (e.g., Railway, Render) and set `VITE_API_URL` to its URL in the Vercel project.
 
 ### Render / Railway (Full Stack)
 1. **Backend**: Create a new Web Service, point to the repo root. Start command: `bun run src/server.ts`.
-2. **Frontend**: Create a Static Site, point to `client` directory. Build command: `bun install && bun run build`. Publish directory: `dist`.
+2. **Frontend**: Create a Static Site, point to `client` directory. Build command: `bun install && bun run build`. Publish directory: `dist`. Set `VITE_API_URL` to the backend's URL.

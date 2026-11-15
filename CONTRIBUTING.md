@@ -12,13 +12,8 @@ cd OptionsPricing
 ```
 
 ### 2. Set Up Development Environment
-Install dependencies for both backend and frontend:
+One install covers the backend and the frontend (Bun workspace):
 ```bash
-# Backend
-bun install
-
-# Frontend
-cd client
 bun install
 ```
 
@@ -37,11 +32,15 @@ git checkout -b feature/amazing-new-feature
 Run the development servers to verify your changes:
 ```bash
 # Terminal 1
-bun run src/server.ts
+bun start
 
 # Terminal 2
-cd client
-bun run dev
+bun run dev:client
+```
+
+Before opening a PR, run what CI runs (typecheck, lint, client build):
+```bash
+bun run check
 ```
 
 ### 6. Submit a Pull Request
@@ -53,7 +52,7 @@ Push your branch and open a Pull Request against the `main` branch. Please inclu
 ## 🎨 Coding Standards
 
 - **Language**: TypeScript for both backend and frontend.
-- **Styling**: TailwindCSS with the custom Bloomberg theme configuration.
+- **Styling**: Tailwind CSS 4. The Bloomberg theme lives in `client/src/index.css` (`@theme` and `@utility`), there is no `tailwind.config.js`.
 - **Architecture**: Keep business logic separate from UI components.
 - **Commits**: Use conventional commits (e.g., `feat: add volatility surface`, `fix: correct delta calculation`).
 

@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { usePost } from './api';
 import { Heatmap } from './Heatmap';
 import { Pairs } from './Pairs';
 import { Signals } from './Signals';
@@ -22,39 +23,16 @@ function App() {
   const [volatility, setVolatility] = useState(0.25);
   const [time, setTime] = useState(1);
   const [optionType, setOptionType] = useState<'call' | 'put'>('call');
-  const [result, setResult] = useState<OptionData | null>(null);
-  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'heatmap' | 'signals' | 'pairs'>('heatmap');
 
-  const calculateOption = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('http://localhost:3001/api/options/price', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          spot,
-          strike,
-          rate,
-          volatility,
-          time,
-          type: optionType,
-        }),
-      });
-      const data = await response.json();
-      if (data.success) {
-        setResult(data.data);
-      }
-    } catch (error) {
-      console.error('Error calculating option:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    calculateOption();
-  }, [spot, strike, rate, volatility, time, optionType]);
+  const { data: result, loading } = usePost<OptionData>('/api/options/price', {
+    spot,
+    strike,
+    rate,
+    volatility,
+    time,
+    type: optionType,
+  });
 
   return (
     <div className="min-h-screen bg-bbg-dark">
@@ -85,7 +63,7 @@ function App() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column: Parameters */}
           <div className="bbg-card p-6 space-y-5">
-            <h2 className="bbg-header px-3 py-2 -m-6 mb-4">PARAMETERS</h2>
+            <h2 className="bbg-header px-3 py-2 -m-6 mb-5">PARAMETERS</h2>
 
             {/* Option Type */}
             <div>
